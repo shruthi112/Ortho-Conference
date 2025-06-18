@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Medical Conference 2025</title>
+  <style>
+    /* [Same styles you provided] */
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to bottom, #f0f2f5, #d1c4e9);
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+
+    h1 {
+      color: #5e35b1;
+      margin-top: 30px;
+      font-size: 36px;
+    }
+
+    h2 {
+      margin: 5px 0 20px;
+      color: #616161;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .edit-icon {
+      cursor: pointer;
+      font-size: 18px;
+      color: #7e57c2;
+    }
+
+    .add-day-btn {
+      margin-left: 10px;
+      padding: 6px 12px;
+      background-color: #7e57c2;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .btn-group {
+      margin: 20px;
+    }
+
+    .btn-group button {
+      background-color: #7e57c2;
+      border: none;
+      color: white;
+      padding: 10px 20px;
+      margin: 5px;
+      cursor: pointer;
+      border-radius: 5px;
+      font-weight: bold;
+    }
+
+    .btn-group button.active {
+      background-color: #512da8;
+    }
+
+    table {
+      margin: 0 auto 20px;
+      border-collapse: collapse;
+      width: 90%;
+      background-color: #f3e5f5;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: center;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #ede7f6;
+      color: #4a148c;
+      font-size: 18px;
+    }
+
+    input, select {
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      width: 90%;
+      box-sizing: border-box;
+    }
+
+    .add-btn {
+      background-color: #388e3c;
+      color: white;
+      padding: 10px 18px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .action-btn {
+      padding: 6px 12px;
+      margin: 2px;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .edit {
+      background-color: #9575cd;
+      color: white;
+    }
+
+    .delete {
+      background-color: #8e24aa;
+      color: white;
+    }
+
+    #pdf-table {
+      width: 90%;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f5e8fc;
+      border-radius: 10px;
+      display: none;
+    }
+
+    #scheduleTable tr:hover {
+      background-color: #e1bee7;
+      transition: background 0.2s;
+    }
+
+    .export-dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    .export-btn {
+      background-color: #2e7d32;
+      color: white;
+      padding: 10px 22px;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #fff;
+      min-width: 160px;
+      box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+      z-index: 1;
+      right: 0;
+      border-radius: 5px;
+    }
+
+    .dropdown-content button {
+      background-color: white;
+      color: #333;
+      padding: 10px 16px;
+      text-align: left;
+      border: none;
+      width: 100%;
+      border-bottom: 1px solid #ddd;
+      cursor: pointer;
+      font-weight: normal;
+    }
+
+    .dropdown-content button:hover {
+      background-color: #f1f1f1;
+    }
+
+    .export-dropdown:hover .dropdown-content {
+      display: block;
+    }
+
+    footer {
+      margin-top: 40px;
+      color: #555;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>MEDICAL CONFERENCE 2025
+    <span class="edit-icon" title="Edit Title">✏️</span>
+  </h1>
+  <h2>
+    Deenanath Mangeshkar Hospital — 10 Sept 2025
+    <span class="edit-icon" title="Edit Title">✏️</span>
+  </h2>
+
+  <div class="btn-group">
+    <button onclick="switchDay('DAY-1')" id="btn-day-1" class="active">DAY-1</button>
+    <button onclick="switchDay('DAY-2')" id="btn-day-2">DAY-2</button>
+    <button class="add-day-btn" title="Add Day">+</button>
+  </div>
+
+  <h3 id="schedule-title">DAY-1</h3>
+
+  <table id="schedule-table">
+    <thead>
+      <tr>
+        <th>Session</th>
+        <th>Time</th>
+        <th>Topic</th>
+        <th>Faculty</th>
+        <th>Duration (min)</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="scheduleTable"></tbody>
+    <tbody id="inputRow">
+      <tr>
+        <td>
+          <select id="session" style="padding: 3px;">
+            <script>
+              for (let i = 1; i <= 50; i++) {
+                document.write(`<option value="Session ${i}">Session ${i}</option>`);
+              }
+            </script>
+          </select>
+        </td>
+        <td><input type="text" id="time" placeholder="e.g. 9 or 14"></td>
+        <td><input type="text" id="topic" placeholder="Topic"></td>
+        <td><input type="text" id="faculty" placeholder="Dr. Name"></td>
+        <td><input type="number" id="duration" placeholder="Duration"></td>
+        <td><button class="add-btn" id="addButton">Add</button></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="export-dropdown">
+    <button class="export-btn">Export ▼</button>
+    <div class="dropdown-content">
+      <button onclick="downloadPDF()">Save as PDF</button>
+      <button onclick="downloadWord()">Save as Word</button>
+    </div>
+  </div>
+
+  <table id="pdf-table">
+    <thead>
+      <tr>
+        <th>Session</th>
+        <th>Time</th>
+        <th>Topic</th>
+        <th>Faculty</th>
+        <th>Duration (min)</th>
+      </tr>
+    </thead>
+    <tbody id="pdf-body"></tbody>
+  </table>
+
+  <footer>
+    © 2025 Medical Conference Committee | Designed by Sanath Bhat
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

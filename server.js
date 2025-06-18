@@ -15,7 +15,7 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // ✅ MongoDB Connection
-mongoose.connect('mongodb+srv://spofficial:Sbhat@6336@conference.a9mpumf.mongodb.net/?retryWrites=true&w=majority&appName=Conference', {
+mongoose.connect('mongodb+srv://spofficial:Sbhat6336@conference.a9mpumf.mongodb.net/?retryWrites=true&w=majority&appName=Conference', {
   useNewUrlParser: true,
   useUnifiedTopology: true
 }).then(() => {

@@ -9,7 +9,7 @@ async function switchDay(day) {
   document.getElementById(`btn-${day.toLowerCase()}`).classList.add("active");
 
   try {
-    const res = await fetch(`http://localhost:5000/api/schedule/${currentDay}`);
+    const res = await fetch(`/api/schedule/${currentDay}`);
     const data = await res.json();
     scheduleData[currentDay] = data;
   } catch (err) {
@@ -42,7 +42,7 @@ document.getElementById("addButton").addEventListener("click", async () => {
   const entry = { day: currentDay, startTime, endTime, topic, faculty, duration, session };
 
   try {
-    const res = await fetch("http://localhost:5000/api/schedule", {
+    const res = await fetch("/api/schedule", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(entry)
@@ -79,7 +79,7 @@ function renderTable() {
     sessionSelect.addEventListener("change", async () => {
       entry.session = sessionSelect.value;
       try {
-        await fetch(`http://localhost:5000/api/schedule/${entry._id}`, {
+        await fetch(`/api/schedule/${entry._id}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(entry)

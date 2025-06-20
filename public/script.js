@@ -128,7 +128,7 @@ function createEditableCell(entry, key, index, isNumber = false) {
       if (isNumber && isNaN(finalValue)) return;
       entry[key] = finalValue;
 
-      fetch(`http://localhost:5000/api/schedule/${entry._id}`, {
+      fetch(`/api/schedule/${entry._id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(entry)
@@ -146,7 +146,7 @@ function createEditableCell(entry, key, index, isNumber = false) {
 async function deleteEntry(index) {
   const entry = scheduleData[currentDay][index];
   try {
-    await fetch(`http://localhost:5000/api/schedule/${entry._id}`, {
+    await fetch(`/api/schedule/${entry._id}`, {
       method: "DELETE"
     });
     scheduleData[currentDay].splice(index, 1);

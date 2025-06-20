@@ -1,16 +1,42 @@
 let currentDay = 'DAY-1';
 let scheduleData = { 'DAY-1': [], 'DAY-2': [] };
 
+// window.onload = () => {
+//   const title = document.getElementById("main-title");
+//   const subtitle = document.getElementById("subtitle");
+
+//   title.contentEditable = "true";
+//   subtitle.contentEditable = "true";
+
+//   title.style.cursor = "text";
+//   subtitle.style.cursor = "text";
+// };
 window.onload = () => {
   const title = document.getElementById("main-title");
   const subtitle = document.getElementById("subtitle");
 
+  // Load saved title & subtitle from localStorage
+  const savedTitle = localStorage.getItem("conferenceTitle");
+  const savedSubtitle = localStorage.getItem("conferenceSubtitle");
+  if (savedTitle) title.innerHTML = savedTitle;
+  if (savedSubtitle) subtitle.innerHTML = savedSubtitle;
+
+  // Make them editable
   title.contentEditable = "true";
   subtitle.contentEditable = "true";
-
   title.style.cursor = "text";
   subtitle.style.cursor = "text";
+
+  // Save on blur (when user clicks away)
+  title.addEventListener("blur", () => {
+    localStorage.setItem("conferenceTitle", title.innerHTML);
+  });
+
+  subtitle.addEventListener("blur", () => {
+    localStorage.setItem("conferenceSubtitle", subtitle.innerHTML);
+  });
 };
+
 
 document.addEventListener("DOMContentLoaded", () => {
   const addDayBtn = document.querySelector('.add-day-btn');

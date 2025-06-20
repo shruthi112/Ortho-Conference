@@ -208,19 +208,19 @@ function createEditableCell(entry, key, index, isNumber = false) {
   const cell = document.createElement("td");
   const span = document.createElement("span");
 
-  // ✅ Always show something clickable — use placeholder if blank
-  const rawValue = entry[key] || ""; // fallback for undefined/null
+  const rawValue = entry[key] || "";
+
+  // ✅ Always render something visible (even if just a blank line)
   span.innerHTML = (key === "faculty" && rawValue)
     ? rawValue.split(",").map(name => name.trim()).join("<br>")
-    : rawValue;
+    : rawValue || "&nbsp;";  // force display of empty cells
 
   span.style.marginRight = "8px";
   span.style.cursor = "pointer";
-  span.style.minHeight = "18px"; // for better empty-cell visibility
+  span.style.minHeight = "18px";
   span.style.display = "inline-block";
   span.style.whiteSpace = "pre-wrap";
 
-  // ✅ Double-click to edit even empty values
   span.ondblclick = () => {
     const input = document.createElement(isNumber ? "input" : "textarea");
     input.value = entry[key] || "";
@@ -236,7 +236,6 @@ function createEditableCell(entry, key, index, isNumber = false) {
 
       entry[key] = finalValue;
 
-      // Auto-update end time if duration changed
       if (key === "duration") {
         const startRaw = getRawTime(entry.startTime);
         const newEndRaw = addMinutes(startRaw, finalValue);
@@ -272,6 +271,7 @@ function createEditableCell(entry, key, index, isNumber = false) {
   cell.appendChild(span);
   return cell;
 }
+
 
 async function deleteEntry(index) {
   const entry = scheduleData[currentDay][index];

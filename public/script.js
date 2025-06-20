@@ -60,7 +60,6 @@ document.getElementById("addButton").addEventListener("click", async () => {
   const duration = parseInt(document.getElementById("duration").value.trim());
   const session = "Session 1";
 
-  // ✅ Validation: Faculty can be blank, but others must be filled
   if (!timeInput.value.trim() || !topic || isNaN(duration)) {
     alert("Please fill all required fields: Start Time, Topic, and Duration.");
     return;
@@ -87,8 +86,14 @@ document.getElementById("addButton").addEventListener("click", async () => {
 
   renderTable();
   autoFillNextStartTime(endRaw);
-  clearInputs(true);
+
+  // ✅ Clear only time and duration; DO NOT reuse topic/faculty
+  document.getElementById("time").value = "";
+  document.getElementById("duration").value = "";
+  document.getElementById("topic").value = "";
+  document.getElementById("faculty").value = "";
 });
+
 
 function renderTable() {
   const tableBody = document.getElementById("scheduleTable");
@@ -141,16 +146,21 @@ function renderTable() {
   });
 
 }
+
 function showInlineAdd(index) {
   const tableBody = document.getElementById("scheduleTable");
   const row = document.createElement("tr");
   row.classList.add("inline-form-row");
 
   row.innerHTML = `
-    <td><select id="inline-session-${index}">${[...Array(50)].map((_, i) => `<option>Session ${i + 1}</option>`).join('')}</select></td>
+    <td>
+      <select id="inline-session-${index}">
+        ${[...Array(50)].map((_, i) => `<option>Session ${i + 1}</option>`).join('')}
+      </select>
+    </td>
     <td><input type="text" id="inline-time-${index}" placeholder="Start Time" style="width: 100px;"></td>
-    <td><input type="text" id="inline-topic-${index}" placeholder="Topic"></td>
-    <td><input type="text" id="inline-faculty-${index}" placeholder="Faculty (optional)"></td>
+    <td><input type="text" id="inline-topic-${index}" placeholder="Topic" value=""></td>
+    <td><input type="text" id="inline-faculty-${index}" placeholder="Faculty (optional)" value=""></td>
     <td><input type="number" id="inline-duration-${index}" placeholder="Duration" style="width: 60px;"></td>
     <td>
       <button onclick="saveInlineAdd(${index})" style="background-color:green; color:white;">✔️ Save</button>
@@ -160,6 +170,7 @@ function showInlineAdd(index) {
 
   tableBody.insertBefore(row, tableBody.children[index + 1]);
 }
+
 
 async function saveInlineAdd(index) {
   const timeVal = document.getElementById(`inline-time-${index}`).value.trim();

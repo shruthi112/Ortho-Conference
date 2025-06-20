@@ -204,78 +204,74 @@ async function saveInlineAdd(index) {
   }
 }
 
-
 function createEditableCell(entry, key, index, isNumber = false) {
   const cell = document.createElement("td");
-  const div = document.createElement("div");
+  const span = document.createElement("span");
 
-  // Show line breaks for faculty names
-  div.innerHTML = key === "faculty"
-    ? entry[key].split(",").map(name => name.trim()).join("<br>")
-    : entry[key];
+  // ✅ Always show something clickable — use placeholder if blank
+  const rawValue = entry[key] || ""; // fallback for undefined/null
+  span.innerHTML = (key === "faculty" && rawValue)
+    ? rawValue.split(",").map(name => name.trim()).join("<br>")
+    : rawValue;
 
-  div.style.marginRight = "8px";
-  div.style.cursor = "text";
-  div.setAttribute("data-original", entry[key]);
+  span.style.marginRight = "8px";
+  span.style.cursor = "pointer";
+  span.style.minHeight = "18px"; // for better empty-cell visibility
+  span.style.display = "inline-block";
+  span.style.whiteSpace = "pre-wrap";
 
-  let isEditing = false;
+  // ✅ Double-click to edit even empty values
+  span.ondblclick = () => {
+    const input = document.createElement(isNumber ? "input" : "textarea");
+    input.value = entry[key] || "";
+    input.style.width = "90%";
+    input.style.fontSize = "14px";
+    input.rows = 2;
 
-  // Enable editing on double click
-  div.addEventListener("dblclick", () => {
-    if (isEditing) return;
-    isEditing = true;
-    div.contentEditable = "true";
-    div.focus();
-  });
+    const saveChange = async () => {
+      const newValue = input.value.trim();
+      const finalValue = isNumber ? parseInt(newValue) : newValue;
 
-  // Save changes on blur or Enter
-  const saveChange = async () => {
-    if (!isEditing) return;
+      if (isNumber && isNaN(finalValue)) return;
 
-    div.contentEditable = "false";
-    isEditing = false;
+      entry[key] = finalValue;
 
-    const newValue = div.innerText.trim();
-    if (newValue === "" || newValue === div.getAttribute("data-original")) return;
+      // Auto-update end time if duration changed
+      if (key === "duration") {
+        const startRaw = getRawTime(entry.startTime);
+        const newEndRaw = addMinutes(startRaw, finalValue);
+        entry.endTime = formatTimeToAMPM(newEndRaw);
+      }
 
-    const finalValue = isNumber ? parseInt(newValue) : newValue;
-    if (isNumber && isNaN(finalValue)) return;
+      try {
+        await fetch(`/api/schedule/${entry._id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(entry)
+        });
+        updateFollowingTimes(index);
+        renderTable();
+      } catch (err) {
+        console.error("Update failed:", err);
+      }
+    };
 
-    entry[key] = finalValue;
+    input.onblur = saveChange;
+    input.onkeydown = (e) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        input.blur();
+      }
+    };
 
-    // Update end time if duration changed
-    if (key === "duration") {
-      const startRaw = getRawTime(entry.startTime);
-      const newEndRaw = addMinutes(startRaw, finalValue);
-      entry.endTime = formatTimeToAMPM(newEndRaw);
-    }
-
-    try {
-      await fetch(`/api/schedule/${entry._id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(entry)
-      });
-      updateFollowingTimes(index);
-      renderTable();
-    } catch (err) {
-      console.error("Update failed:", err);
-    }
+    cell.innerHTML = "";
+    cell.appendChild(input);
+    input.focus();
   };
 
-  div.addEventListener("blur", saveChange);
-  div.addEventListener("keydown", (e) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      div.blur();
-    }
-  });
-
-  cell.appendChild(div);
+  cell.appendChild(span);
   return cell;
 }
-
-
 
 async function deleteEntry(index) {
   const entry = scheduleData[currentDay][index];

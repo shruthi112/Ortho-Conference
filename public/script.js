@@ -208,7 +208,12 @@ async function saveInlineAdd(index) {
 function createEditableCell(entry, key, index, isNumber = false) {
   const cell = document.createElement("td");
   const span = document.createElement("span");
-  span.textContent = entry[key];
+
+  // Display faculty names on separate lines if comma-separated
+  span.innerHTML = key === "faculty"
+    ? entry[key].split(",").map(name => name.trim()).join("<br>")
+    : entry[key];
+
   span.style.marginRight = "8px";
 
   const editBtn = document.createElement("button");
@@ -245,6 +250,7 @@ function createEditableCell(entry, key, index, isNumber = false) {
   cell.append(span, editBtn);
   return cell;
 }
+
 
 async function deleteEntry(index) {
   const entry = scheduleData[currentDay][index];

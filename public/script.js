@@ -131,8 +131,8 @@ function renderTable() {
 
     const actionCell = document.createElement("td");
     actionCell.innerHTML = `
-  <button class="action-btn delete" style="background-color:#8e24aa; color:white;" onclick="deleteEntry(${index})">🗑️ Delete</button>
-  <button class="action-btn add-below" style="background-color:#6a1b9a; color:white; margin-left:5px;" onclick="showInlineAdd(${index})">➕ Add Below</button>
+  <button class="action-btn delete" style="background-color:#8e24aa; color:white;" onclick="deleteEntry(${index})">🗑️</button>
+  <button class="action-btn add-below" style="background-color:#6a1b9a; color:white; margin-left:5px;" onclick="showInlineAdd(${index})">➕</button>
 `;
 
 

@@ -207,49 +207,74 @@ async function saveInlineAdd(index) {
 
 function createEditableCell(entry, key, index, isNumber = false) {
   const cell = document.createElement("td");
-  const span = document.createElement("span");
+  const div = document.createElement("div");
 
-  // Display faculty names on separate lines if comma-separated
-  span.innerHTML = key === "faculty"
+  // Show line breaks for faculty names
+  div.innerHTML = key === "faculty"
     ? entry[key].split(",").map(name => name.trim()).join("<br>")
     : entry[key];
 
-  span.style.marginRight = "8px";
+  div.style.marginRight = "8px";
+  div.style.cursor = "text";
+  div.setAttribute("data-original", entry[key]);
 
-  const editBtn = document.createElement("button");
-  editBtn.innerHTML = "✏️";
-  editBtn.classList.add("edit-btn");
-  editBtn.style.border = "none";
-  editBtn.style.background = "transparent";
-  editBtn.style.cursor = "pointer";
+  let isEditing = false;
 
-  editBtn.onclick = () => {
-    const newValue = prompt(`Edit ${key}:`, entry[key]);
-    if (newValue !== null && newValue.trim() !== "") {
-      const finalValue = isNumber ? parseInt(newValue.trim()) : newValue.trim();
-      if (isNumber && isNaN(finalValue)) return;
-      entry[key] = finalValue;
+  // Enable editing on double click
+  div.addEventListener("dblclick", () => {
+    if (isEditing) return;
+    isEditing = true;
+    div.contentEditable = "true";
+    div.focus();
+  });
 
-      if (key === "duration") {
-        const startRaw = getRawTime(entry.startTime);
-        const newEndRaw = addMinutes(startRaw, finalValue);
-        entry.endTime = formatTimeToAMPM(newEndRaw);
-      }
+  // Save changes on blur or Enter
+  const saveChange = async () => {
+    if (!isEditing) return;
 
-      fetch(`/api/schedule/${entry._id}`, {
+    div.contentEditable = "false";
+    isEditing = false;
+
+    const newValue = div.innerText.trim();
+    if (newValue === "" || newValue === div.getAttribute("data-original")) return;
+
+    const finalValue = isNumber ? parseInt(newValue) : newValue;
+    if (isNumber && isNaN(finalValue)) return;
+
+    entry[key] = finalValue;
+
+    // Update end time if duration changed
+    if (key === "duration") {
+      const startRaw = getRawTime(entry.startTime);
+      const newEndRaw = addMinutes(startRaw, finalValue);
+      entry.endTime = formatTimeToAMPM(newEndRaw);
+    }
+
+    try {
+      await fetch(`/api/schedule/${entry._id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(entry)
-      }).then(() => {
-        updateFollowingTimes(index);
-        renderTable();
-      }).catch(err => console.error("Update failed:", err));
+      });
+      updateFollowingTimes(index);
+      renderTable();
+    } catch (err) {
+      console.error("Update failed:", err);
     }
   };
 
-  cell.append(span, editBtn);
+  div.addEventListener("blur", saveChange);
+  div.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      div.blur();
+    }
+  });
+
+  cell.appendChild(div);
   return cell;
 }
+
 
 
 async function deleteEntry(index) {

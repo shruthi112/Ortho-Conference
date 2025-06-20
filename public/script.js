@@ -210,16 +210,24 @@ function createEditableCell(entry, key, index, isNumber = false) {
 
   const rawValue = entry[key] || "";
 
-  // ✅ Always render something visible (even if just a blank line)
-  span.innerHTML = (key === "faculty" && rawValue)
-    ? rawValue.split(",").map(name => name.trim()).join("<br>")
-    : rawValue || "&nbsp;";  // force display of empty cells
+  if (key === "faculty" && rawValue) {
+    span.innerHTML = rawValue
+      .split(",")
+      .map(name => name.trim())
+      .join("<br>");
+  } else if (!rawValue) {
+    // Show light placeholder for empty values
+    span.innerHTML = "<span style='color:#aaa;font-style:italic;'>Click to edit</span>";
+  } else {
+    span.textContent = rawValue;
+  }
 
   span.style.marginRight = "8px";
   span.style.cursor = "pointer";
   span.style.minHeight = "18px";
   span.style.display = "inline-block";
   span.style.whiteSpace = "pre-wrap";
+  span.title = "Double-click to edit";
 
   span.ondblclick = () => {
     const input = document.createElement(isNumber ? "input" : "textarea");
@@ -271,6 +279,75 @@ function createEditableCell(entry, key, index, isNumber = false) {
   cell.appendChild(span);
   return cell;
 }
+
+
+// function createEditableCell(entry, key, index, isNumber = false) {
+//   const cell = document.createElement("td");
+//   const span = document.createElement("span");
+
+//   const rawValue = entry[key] || "";
+
+//   // ✅ Always render something visible (even if just a blank line)
+//   span.innerHTML = (key === "faculty" && rawValue)
+//     ? rawValue.split(",").map(name => name.trim()).join("<br>")
+//     : rawValue || "&nbsp;";  // force display of empty cells
+
+//   span.style.marginRight = "8px";
+//   span.style.cursor = "pointer";
+//   span.style.minHeight = "18px";
+//   span.style.display = "inline-block";
+//   span.style.whiteSpace = "pre-wrap";
+
+//   span.ondblclick = () => {
+//     const input = document.createElement(isNumber ? "input" : "textarea");
+//     input.value = entry[key] || "";
+//     input.style.width = "90%";
+//     input.style.fontSize = "14px";
+//     input.rows = 2;
+
+//     const saveChange = async () => {
+//       const newValue = input.value.trim();
+//       const finalValue = isNumber ? parseInt(newValue) : newValue;
+
+//       if (isNumber && isNaN(finalValue)) return;
+
+//       entry[key] = finalValue;
+
+//       if (key === "duration") {
+//         const startRaw = getRawTime(entry.startTime);
+//         const newEndRaw = addMinutes(startRaw, finalValue);
+//         entry.endTime = formatTimeToAMPM(newEndRaw);
+//       }
+
+//       try {
+//         await fetch(`/api/schedule/${entry._id}`, {
+//           method: "PUT",
+//           headers: { "Content-Type": "application/json" },
+//           body: JSON.stringify(entry)
+//         });
+//         updateFollowingTimes(index);
+//         renderTable();
+//       } catch (err) {
+//         console.error("Update failed:", err);
+//       }
+//     };
+
+//     input.onblur = saveChange;
+//     input.onkeydown = (e) => {
+//       if (e.key === "Enter" && !e.shiftKey) {
+//         e.preventDefault();
+//         input.blur();
+//       }
+//     };
+
+//     cell.innerHTML = "";
+//     cell.appendChild(input);
+//     input.focus();
+//   };
+
+//   cell.appendChild(span);
+//   return cell;
+// }
 
 
 async function deleteEntry(index) {

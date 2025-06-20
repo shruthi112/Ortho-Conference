@@ -89,8 +89,19 @@
       padding: 8px;
       border-radius: 6px;
       border: 1px solid #ccc;
-      width: 90%;
       box-sizing: border-box;
+    }
+
+    #time {
+      width: 90px;
+    }
+
+    #duration {
+      width: 80px;
+    }
+
+    #topic {
+      width: 250px;
     }
 
     .add-btn {
@@ -119,6 +130,11 @@
 
     .delete {
       background-color: #8e24aa;
+      color: white;
+    }
+
+    .insert {
+      background-color: #2e7d32;
       color: white;
     }
 
@@ -192,13 +208,8 @@
 </head>
 <body>
 
-  <h1>MEDICAL CONFERENCE 2025
-    <span class="edit-icon" title="Edit Title">✏️</span>
-  </h1>
-  <h2>
-    Deenanath Mangeshkar Hospital — 10 Sept 2025
-    <span class="edit-icon" title="Edit Title">✏️</span>
-  </h2>
+  <h1 id="main-title">MEDICAL CONFERENCE 2025 <span class="edit-icon"></span></h1>
+  <h2 id="subtitle">Deenanath Mangeshkar Hospital — 10 Sept 2025 <span class="edit-icon"></span></h2>
 
   <div class="btn-group">
     <button onclick="switchDay('DAY-1')" id="btn-day-1" class="active">DAY-1</button>

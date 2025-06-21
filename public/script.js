@@ -172,21 +172,23 @@ function showInlineAdd(index) {
   const row = document.createElement("tr");
   row.classList.add("inline-form-row");
 
-  row.innerHTML = `
-  <td><select id="inline-session-${index}">${[...Array(50)].map((_, i) => `<option>Session ${i + 1}</option>`).join('')}</select></td>
-  <td><input type="text" id="inline-time-${index}" placeholder="Start Time" style="width: 100px;"></td>
-  <td><input type="text" id="inline-topic-${index}" placeholder="Topic"></td>
-  <td><input type="text" id="inline-faculty-${index}" placeholder="Faculty (optional)"></td>
-  <td><input type="number" id="inline-duration-${index}" placeholder="Duration" style="width: 60px;"></td>
-  <td style="display:flex; gap:6px; justify-content:center;">
-    <button onclick="saveInlineAdd(${index})" class="icon-btn save" title="Save">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 16.2l-3.5-3.5L4 14.2l5 5 12-12-1.4-1.4z"/></svg>
+   row.innerHTML = 
+    <td><select id="inline-session-${index}">${[...Array(50)].map((_, i) => <option>Session ${i + 1}</option>).join('')}</select></td>
+    <td><input type="text" id="inline-time-${index}" placeholder="Start Time" style="width: 100px;"></td>
+    <td><input type="text" id="inline-topic-${index}" placeholder="Topic"></td>
+    <td><input type="text" id="inline-faculty-${index}" placeholder="Faculty (optional)"></td>
+    <td><input type="number" id="inline-duration-${index}" placeholder="Duration" style="width: 60px;"></td>
+    <td style="display: flex; gap: 6px; justify-content: center;">
+    <button onclick="saveInlineAdd(${index})"
+    style="background-color: green; color: white; border: none; padding: 8px 12px; border-radius: 5px; font-size: 16px; cursor: pointer;">
+    ✔
     </button>
-    <button onclick="this.closest('tr').remove()" class="icon-btn cancel" title="Cancel">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+    <button onclick="this.closest('tr').remove()"
+    style="background-color: red; color: white; border: none; padding: 8px 12px; border-radius: 5px; font-size: 16px; cursor: pointer;">
+    ✖
     </button>
-  </td>
-`;
+    </td>
+  ;
 
 
   tableBody.insertBefore(row, tableBody.children[index + 1]);

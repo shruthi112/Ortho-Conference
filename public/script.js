@@ -178,15 +178,9 @@ function showInlineAdd(index) {
     <td><input type="text" id="inline-topic-${index}" placeholder="Topic"></td>
     <td><input type="text" id="inline-faculty-${index}" placeholder="Faculty (optional)"></td>
     <td><input type="number" id="inline-duration-${index}" placeholder="Duration" style="width: 60px;"></td>
-    <td style="display: flex; gap: 6px; justify-content: center;">
-    <button onclick="saveInlineAdd(${index})"
-    style="background-color: green; color: white; border: none; padding: 8px 12px; border-radius: 5px; font-size: 16px; cursor: pointer;">
-    ✔
-    </button>
-    <button onclick="this.closest('tr').remove()"
-    style="background-color: red; color: white; border: none; padding: 8px 12px; border-radius: 5px; font-size: 16px; cursor: pointer;">
-    ✖
-    </button>
+    <td>
+      <button onclick="saveInlineAdd(${index})" style="background-color:green; color:white;">✅</button>
+      <button onclick="this.closest('tr').remove()" style="background-color:l; color:white;">❌</button>
     </td>
   ;
 

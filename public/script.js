@@ -172,18 +172,17 @@ function showInlineAdd(index) {
   const row = document.createElement("tr");
   row.classList.add("inline-form-row");
 
-   row.innerHTML = 
-    <td><select id="inline-session-${index}">${[...Array(50)].map((_, i) => <option>Session ${i + 1}</option>).join('')}</select></td>
+  row.innerHTML = `
+    <td><select id="inline-session-${index}">${[...Array(50)].map((_, i) => `<option>Session ${i + 1}</option>`).join('')}</select></td>
     <td><input type="text" id="inline-time-${index}" placeholder="Start Time" style="width: 100px;"></td>
     <td><input type="text" id="inline-topic-${index}" placeholder="Topic"></td>
     <td><input type="text" id="inline-faculty-${index}" placeholder="Faculty (optional)"></td>
     <td><input type="number" id="inline-duration-${index}" placeholder="Duration" style="width: 60px;"></td>
     <td>
-      <button onclick="saveInlineAdd(${index})">✅</button>
-      <button onclick="this.closest('tr').remove()">❌</button>
+      <button onclick="saveInlineAdd(${index})" style="background-color:green; color:white;">✔️ Save</button>
+      <button onclick="this.closest('tr').remove()" style="background-color:red; color:white;">❌ Cancel</button>
     </td>
-  ;
-
+  `;
 
   tableBody.insertBefore(row, tableBody.children[index + 1]);
 }

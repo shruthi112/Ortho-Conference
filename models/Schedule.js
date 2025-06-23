@@ -6,7 +6,8 @@ const ScheduleSchema = new mongoose.Schema({
   endTime: String,
   topic: String,
   faculty: String,
-  duration: Number
+  duration: Number,
+  session: String
 });
 
 module.exports = mongoose.model('Schedule', ScheduleSchema);

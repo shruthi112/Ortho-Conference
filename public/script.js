@@ -419,8 +419,14 @@ function autoFillFromLast() {
     lastSelectedSession = lastEntry.session;
     const sessionSelect = document.getElementById("session");
     sessionSelect.value = lastSelectedSession;
+
+    //clear fields for a new entry in case of faculty and topic
+    document.getElementById("faculty").value = '';
+    document.getElementById("topic").value = '';
   } else {
     document.getElementById("time").value = '';
+    document.getElementById("faculty").value = '';
+    document.getElementById("topic").value = '';
   }
 }
 

@@ -430,6 +430,16 @@ function autoFillFromLast() {
   }
 }
 
+//clear inputs function if not defined
+function clearInputs(preserveTime = false) {
+  if (!preserveTime) {
+    document.getElementById("time").value = '';
+  }
+  document.getElementById("topic").value = '';
+  document.getElementById("faculty").value = '';
+  document.getElementById("duration").value = '';
+}
+
 function formatRawTime(input) {
   if (!input.includes(":")) {
     let hour = parseInt(input);

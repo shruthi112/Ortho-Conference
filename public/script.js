@@ -416,6 +416,9 @@ function autoFillFromLast() {
   if (lastEntry) {
     const lastEndRaw = getRawTime(lastEntry.endTime);
     autoFillNextStartTime(lastEndRaw);
+    lastSelectedSession = lastEntry.session;
+    const sessionSelect = document.getElementById("session");
+    sessionSelect.value = lastSelectedSession;
   } else {
     document.getElementById("time").value = '';
   }

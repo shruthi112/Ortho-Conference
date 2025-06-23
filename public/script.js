@@ -1,5 +1,6 @@
 let currentDay = 'DAY-1';
 let scheduleData = { 'DAY-1': [], 'DAY-2': [] };
+let lastSelectedSession = "Session 1";
 
 // window.onload = () => {
 //   const title = document.getElementById("main-title");
@@ -84,7 +85,8 @@ document.getElementById("addButton").addEventListener("click", async () => {
   const topic = document.getElementById("topic").value.trim();
   const faculty = document.getElementById("faculty").value.trim(); // Can be blank
   const duration = parseInt(document.getElementById("duration").value.trim());
-  const session = "Session 1";
+  const session = document.getElementById("session").value;
+  lastSelectedSession = session;
 
   // ✅ Validation: Faculty can be blank, but others must be filled
   if (!timeInput.value.trim() || !topic || isNaN(duration)) {

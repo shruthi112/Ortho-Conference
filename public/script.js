@@ -437,7 +437,6 @@ function clearInputs(preserveTime = false) {
   }
   document.getElementById("topic").value = '';
   document.getElementById("faculty").value = '';
-  document.getElementById("duration").value = '';
 }
 
 function formatRawTime(input) {
